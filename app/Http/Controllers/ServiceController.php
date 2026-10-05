@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreServiceRequest;
+use App\Http\Requests\UpdateServiceRequest;
+use App\Models\Appointment;
 use App\Models\Service;
+use App\Models\Appointments;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Symfony\Component\HttpKernel\HttpCache\Store;
 
 class ServiceController extends Controller
 {
@@ -13,7 +18,7 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $services = Service::orderBy('name')->paginate(5);
+        $services = Service::orderBy('id')->paginate(5);
 
        return view('services.index', compact('services'));
     }
@@ -29,21 +34,11 @@ class ServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreServiceRequest $request)
     {
-        //dd($request);
+        Service::create($request->validated());
 
-        $data=$request->validate([
-           'name'=>'required|unique|string|max:255',
-           'description' => 'nullable|string|max:1000',
-           'duration_minutes'=>'required|numeric|between:5,480',
-           'price'=>'required|numeric|decimal:0,2',
-           'is_active'=>'boolean'
-        ]);
-
-        Service::create($data);
-
-        return redirect()->route('services.index')->with('succedd','Servicio Creado Correctamente');
+        return redirect()->route('services.index')->with('success','Servicio Creado Correctamente');
     }
 
     /**
@@ -57,17 +52,21 @@ class ServiceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Service $service)
+    public function edit(Service $service):View
     {
-        //
+
+        return View('services.edit', compact('service'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Service $service)
+    public function update(UpdateServiceRequest $request, Service $service)
     {
-        //
+         $service->update($request->validated());
+
+        return redirect()->route('services.index')->with('success','Servicio Actualizado Correctamente');
+        
     }
 
     /**
@@ -75,6 +74,23 @@ class ServiceController extends Controller
      */
     public function destroy(Service $service)
     {
-        //
+
+      $appointments=Appointment::find($service);
+
+      if($appointments){
+
+       $service->update([
+        'is_active' => false
+    ]);
+
+     return redirect()
+      ->route('services.index')
+      ->with('success', 'Servicio Eliminado Correctamente');
+
+      }
+
+      return redirect()
+      ->route('services.index')
+      ->with('error', 'Error eliminando el servicio, contacte el ADMIN');
     }
 }

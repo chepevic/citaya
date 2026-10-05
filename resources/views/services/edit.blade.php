@@ -1,32 +1,39 @@
 @extends('layouts.app')
 
 
-@section('title','Crear Servicio')
+@section('title','Editar Servicio')
 
 @section('content')
 
-<form action="{{route('services.store')}}" method="POST" class="bg-white w-1/2 mx-auto p-5">
+
+<form action="{{route('services.update',$service)}}" method="POST" class="bg-white w-1/2 mx-auto p-5">
 
    @csrf
 
+   @method('PUT')
+
+   <div>
+    <h2>Editar Service:</h2>
+   </div>
+
      <div class="my-3">
         <label for="name" class="block">Nombre:</label>
-        <input type="text" name="name" id="name" class="border-2 w-full" value='{{old("name")}}'>
+        <input type="text" name="name" id="name" class="border-2 w-full" value="{{old('name', $service->name)}}">
          @error('name') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
      </div>   
      <div class="my-3">
         <label for="description" class="block">Descripción:</label>
-        <textarea name="description" id="description" rows="3" class="border-2 w-full">{{old('description')}}</textarea>
+        <textarea name="description" id="description" rows="3" class="border-2 w-full">{{old('description', $service->description)}}</textarea>
          @error('description') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
      </div>   
      <div class="my-3">
         <label for="duration_minutes" class="block">Duración:</label>
-        <input type="number" name="duration_minutes" id="duration_minutes" class="border-2 w-full" min='5' max='480' step='1' value='{{old("duration_minutes")}}'>
+        <input type="number" name="duration_minutes" id="duration_minutes" class="border-2 w-full" min='5' max='480' step='1' value="{{old('duration_minutes', $service->duration_minutes)}}">
           @error('duration_minutes') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
      </div>   
      <div class="my-3">
         <label for="price" class="block">Precio:</label>
-        <input type="number" name="price" id="price" step="0.01" min=0 class="border-2 w-full" value='{{old("price")}}'>
+        <input type="number" name="price" id="price" step="0.01" min=0 class="border-2 w-full" value="{{old('price', $service->price)}}">
          @error('price') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
      </div>   
       <div class="my-3">
@@ -36,7 +43,7 @@
          @error('is_active') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
      </div>  
      <div class="my-3">
-        <button type="submit" class="bg-blue-500 p-2 w-[100px] rounded-full">Crear</button>
+        <button type="submit" class="bg-blue-500 px-4 py-2 rounded-full">Actualizar Servicio</button>
      </div>   
 
 </form>

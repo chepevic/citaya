@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateServiceRequest extends FormRequest
 {
@@ -12,7 +13,7 @@ class UpdateServiceRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,8 +23,22 @@ class UpdateServiceRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
+         return[
+              'name' => [
+            'required',
+            'string',
+            'max:255',
+            'regex:/^[\p{L}\p{N}\s\-\.\(\)]+$/u',
+            Rule::unique('services', 'name')
+                ->ignore($this->service),
+        ],
+           'description' => 'nullable|string|max:1000',
+           'duration_minutes'=>'required|integer|between:5,480',
+           'price'=>'required|numeric|decimal:0,2|min:0',
+           'is_active'=>'boolean'
         ];
+
     }
+
+
 }
