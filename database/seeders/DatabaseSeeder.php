@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Appointment;
+use App\Models\Client;
 use App\Models\Professional;
 use App\Models\Service;
 use App\Models\User;
@@ -18,7 +19,7 @@ class DatabaseSeeder extends Seeder
      */
    public function run(): void
 {
-    $clients = User::factory(50)->create();
+    $clients = Client::factory(50)->create();
     $professionals = Professional::factory(10)->create();
     $services = Service::factory(10)->create();
 

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id')->constrained('users')->restrictOnDelete();
+            $table->foreignId('client_id')->constrained()->restrictOnDelete();
             $table->foreignId('professional_id')->constrained()->restrictOnDelete();
             $table->foreignId('service_id')->constrained()->restrictOnDelete();
             $table->dateTime('starts_at');

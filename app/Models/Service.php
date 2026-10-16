@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Service extends Model
 {
@@ -17,14 +18,19 @@ class Service extends Model
         'is_active'
     ];
 
-    protected function cast():array{
+    protected function casts(): array
+    {
 
-    return [
-        'duration_minutes'=>'integer',
-        'price'=>'decimal:2',
-        'is_active'=>'boolean'
-    ];
+        return [
+            'duration_minutes' => 'integer',
+            'price' => 'decimal:2',
+            'is_active' => 'boolean'
+        ];
+    }
 
-
+    // Service.php
+    public function appointments(): HasMany
+    {
+        return $this->hasMany(Appointment::class);
     }
 }

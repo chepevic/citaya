@@ -4,93 +4,69 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
-use App\Models\Appointment;
 use App\Models\Service;
-use App\Models\Appointments;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Symfony\Component\HttpKernel\HttpCache\Store;
 
 class ServiceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    
+    public function index(): View
     {
         $services = Service::orderBy('id')->paginate(5);
 
-       return view('services.index', compact('services'));
+        return view('services.index', compact('services'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create():View
+    
+    public function create(): View
     {
-        return View('services.create');
+        return view('services.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreServiceRequest $request)
+   
+    public function store(StoreServiceRequest $request): RedirectResponse
     {
         Service::create($request->validated());
 
-        return redirect()->route('services.index')->with('success','Servicio Creado Correctamente');
+        return redirect()->route('services.index')->with('success', 'Servicio Creado Correctamente');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Service $service)
+  
+    public function show(Service $service):View
     {
-        //
+        return view('services.show', compact('service'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Service $service):View
+
+
+    public function edit(Service $service): View
     {
 
-        return View('services.edit', compact('service'));
+        return view('services.edit', compact('service'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateServiceRequest $request, Service $service)
+   
+    public function update(UpdateServiceRequest $request, Service $service): RedirectResponse
     {
-         $service->update($request->validated());
+        $service->update($request->validated());
 
-        return redirect()->route('services.index')->with('success','Servicio Actualizado Correctamente');
-        
+        return redirect()->route('services.index')->with('success', 'Servicio Actualizado Correctamente');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Service $service)
+
+    public function destroy(Service $service): RedirectResponse
     {
+        if ($service->appointments()->exists()) {
+            $service->update(['is_active' => false]);
 
-      $appointments=Appointment::find($service);
+            return redirect()->route('services.index')
+                ->with('success', 'El servicio tiene citas asociadas, así que se ha desactivado.');
+        }
 
-      if($appointments){
+        $service->delete();
 
-       $service->update([
-        'is_active' => false
-    ]);
-
-     return redirect()
-      ->route('services.index')
-      ->with('success', 'Servicio Eliminado Correctamente');
-
-      }
-
-      return redirect()
-      ->route('services.index')
-      ->with('error', 'Error eliminando el servicio, contacte el ADMIN');
+        return redirect()->route('services.index')
+            ->with('success', 'Servicio eliminado correctamente.');
     }
 }

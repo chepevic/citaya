@@ -39,7 +39,7 @@
       <div class="my-3">
         <label for="is_active" class="block">Activo:</label>
          <input type="hidden" name="is_active" value="0">
-        <input type="checkbox" name="is_active" id="is_active" class="border-2 p-3" value='1'  @checked(old('is_active', true))>
+        <input type="checkbox" name="is_active" id="is_active" class="border-2 p-3" value='1'  @checked(old('is_active', $service->is_active ?? true))>
          @error('is_active') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
      </div>  
      <div class="my-3">
