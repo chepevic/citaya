@@ -31,7 +31,7 @@
                 </button>
             </div>
         </div>
-        @endif
+    @endif
 
         <a href="{{route('services.create')}}" class="bg-blue-500 p-3 mb-10 w-[200px] rounded-full">Crear Servicio</a>
 

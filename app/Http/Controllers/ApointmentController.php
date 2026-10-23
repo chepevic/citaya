@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAppointmentRequest;
+use App\Models\Appointment;
 use App\Models\Professional;
 use App\Models\Service;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -15,7 +18,10 @@ class ApointmentController extends Controller
      */
     public function index():View
     {
-        return view('appointments.index');
+       $appointments = Appointment::with(['client', 'professional', 'service'])
+        ->orderBy('starts_at', 'desc')
+        ->paginate(20);
+        return view('appointments.index', compact('appointments'));
     }
 
     /**
@@ -35,9 +41,11 @@ class ApointmentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreAppointmentRequest $request):RedirectResponse
     {
-        //
+      Appointment::create($request->validated());
+
+        return redirect()->route('appointments.index')->with('success', 'Cita Creada Correctamente');
     }
 
     /**
@@ -71,4 +79,6 @@ class ApointmentController extends Controller
     {
         //
     }
+
+    
 }

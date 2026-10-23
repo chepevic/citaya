@@ -62,4 +62,38 @@ class ClientController extends Controller
     {
         //
     }
+
+     public function checkByName(Request $request)
+{   
+    
+
+
+    $query = $request->input('name');
+
+
+    //dd($query);
+
+
+    if($query===null || $query===''){
+
+       return response()->json(['ok'=>true, 'clients'=>[]]);
+
+
+    } 
+
+
+    $clients = Client::where('name', 'LIKE', "%{$query}%")
+        ->orWhere('lastname', 'LIKE', "%{$query}%")
+        //  ->orWhere('id_number', 'LIKE', "%{$query}%")
+          ->take(10)
+        ->get();
+
+
+
+
+    return response()->json([
+                            'ok'=>true,
+                            'clients'=>$clients
+                            ]);
+}
 }

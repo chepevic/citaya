@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApointmentController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +13,7 @@ Route::get('/', function () {
 
 Route::resource('services', ServiceController::class);
 Route::resource('appointments', ApointmentController::class);
+ Route::get('/clients/checkByName', [ClientController::class, 'checkByName'])->name('clients.checkByName');
 
 // Route::get('/test-n1', function () {
 //     DB::enableQueryLog();

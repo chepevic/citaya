@@ -1,0 +1,10 @@
+#list_clients{
+            background-color: white;
+            border: solid 1px black!important;
+            margin-top: 10px;
+            border-radius: 5px;
+            display: none;
+            padding: 5px;
+            cursor: pointer;
+        }
+
